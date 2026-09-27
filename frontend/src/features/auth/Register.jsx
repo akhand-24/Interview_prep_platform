@@ -12,6 +12,7 @@ const Register = () => {
 
   const handlesubmit=async ()=>{
     await  handlesubmit({username,email,password});
+    navigate("/") //go to dashboard
   } 
 
   return (

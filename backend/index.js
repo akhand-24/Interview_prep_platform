@@ -1,4 +1,5 @@
 const express=require("express");
+const cors=require("cors")
 const { connectDB } = require("./server/database");
 const authrouter = require("./server/routes/auth.routes");
 const cookieParser = require("cookie-parser");
@@ -9,6 +10,10 @@ const port=process.env.port
 const app= express();
 app.use(express.json());
 app.use(cookieParser())
+app.use(cors({
+origin:true,
+credentials:true
+}))
 
 app.use("/api/auth",authrouter)
 

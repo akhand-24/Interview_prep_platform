@@ -2,7 +2,9 @@ const express= require("express");
 const { default: mongoose } = require("mongoose");
 const usermodel = require("../models");
 const bcrypt=require("bcrypt")
-const jwt=require("jsonwebtoken")
+const jwt=require("jsonwebtoken");
+const blacklistmodel = require("../models/blacklist.model");
+const { authuser } = require("../middlewares/auth.middleware");
 
 
 const authrouter= express.Router()
@@ -17,7 +19,7 @@ authrouter.post("/register",async function(req,res){
         })
     }
 
-    const user= await usermodel.findOne({
+    let user= await usermodel.findOne({
         $or:[
             {username:username},
             {email: email}
@@ -50,7 +52,7 @@ authrouter.post("/register",async function(req,res){
 
 authrouter.post("/login",async function(req,res){
     const {email,password}=req.body
-    const user = await usermodel.findOne({
+let user = await usermodel.findOne({
         email
     })
 
@@ -71,8 +73,46 @@ authrouter.post("/login",async function(req,res){
    res.cookie("token",token);
 
    res.status(201).json({message:"User Logged In successfully",user:{
-    id:user._id,username,email
+    id:user._id,username:user.username,email
    }})    
+
+})
+
+authrouter.get("/logout",async function(req,res){
+    const token=req.cookies.token;
+
+    if(token)
+    {
+        await blacklistmodel.create({
+            token
+        })
+    }
+
+    res.clearCookie("token")
+
+    res.json({
+        message:"User Logged Out successfully"
+    })
+})
+
+authrouter.get("/getme",authuser, async function(req,res){
+    const id=req.user.id;
+
+    const user=await usermodel.findOne({
+        _id:id
+    })
+
+    if(!user)
+    {
+       return res.json({message:"user not authenticated"})
+    }
+
+    res.json({user:{
+        id,
+        username:user.username,
+        email:user.email
+    }})
+
 
 })
 

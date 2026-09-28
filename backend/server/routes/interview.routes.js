@@ -49,36 +49,32 @@ res.status(200).json({
         
 })
 
-interviewrouter.get("",authuser,async (req,res)=>{
+interviewrouter.get("", authuser, async (req, res) => {
     try {
-        const userId = new mongoose.Types.ObjectId(req.user.id);
-        const reports = await interviewreportModel.aggregate([
-            {
-                $match: {
-                    user: userId
-                }
-            },
-            {
-                $project: {
-                    jobDescription: {
-                        $concat: [
-                            { $substrCP: ["$jobDescription", 0, 30] },
-                            "..."
-                        ]
-                    },
-                    matchScore: 1
-                }
-            }
-        ]);
+        console.log("Logged-in user ID:", req.user?.id);
+
+        const reports = await interviewreportModel
+            .find({ user: req.user.id }, { jobDescription: 1, matchScore: 1 })
+            .sort({ _id: -1 });
+
+        console.log("Found reports count:", reports.length);
+
+        const formattedReports = reports.map((r) => ({
+            _id: r._id,
+            jobDescription: (r.jobDescription || "").slice(0, 30) + "...",
+            matchScore: r.matchScore,
+        }));
+
         return res.status(200).json({
             message: "Interview Record Fetched",
-            reports: reports || []
+            reports: formattedReports,
         });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to fetch reports" });
+        console.error("Error in GET /api/interview:", err);
+        return res.status(500).json({ message: "Server error", error: err.message });
     }
 });
+
 
     
 

@@ -8,7 +8,7 @@ const interviewrouter= express.Router()
 
 interviewrouter.post("",authuser,upload.single("resume") ,async (req,res)=>{
 
-    
+    const userId=req.user.id
     const resumecontent=await (new pdfparse.PDFParse(Uint8Array.from(req.file.buffer))).getText()  
     const {selfDescription,jobDescription}=req.body
 
@@ -20,6 +20,7 @@ interviewrouter.post("",authuser,upload.single("resume") ,async (req,res)=>{
 
     const newreport=await interviewreportModel.create({
         resume:resumecontent.text,
+        user:userId,
         selfDescription,
         jobDescription,
         ...interviewReport
@@ -31,7 +32,7 @@ interviewrouter.post("",authuser,upload.single("resume") ,async (req,res)=>{
     })
 })
 
-interviewrouter.post("/report/:interviewId",authuser,async(req,res)=>{
+interviewrouter.get("/report/:interviewId",authuser,async(req,res)=>{
     const {interviewId}=req.params
 
     const interviewReport= await interviewreportModel.findOne({_id:interviewId})
@@ -46,6 +47,37 @@ res.status(200).json({
     interviewReport
 })
         
+})
+
+interviewrouter.get("",authuser,async (req,res)=>{
+    
+    const userId=req.user.id
+
+   const reports = await interviewreportModel.aggregate([
+    {
+        $match: {
+            user: userId
+        }
+    },
+    {
+        $project: {
+            jobDescription: {
+                $concat: [
+                    { $substrCP: ["$jobDescription", 0, 100] },
+                    "..."
+                ]
+            },
+            matchScore: 1
+        }
+    }
+]);
+
+ 
+
+res.status(200).json({
+    message:"Interview Record Fetched",
+    reports
+})
 })
 
 module.exports=interviewrouter

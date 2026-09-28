@@ -4,6 +4,7 @@ const { connectDB } = require("./server/database");
 const authrouter = require("./server/routes/auth.routes");
 const cookieParser = require("cookie-parser");
 require("dotenv").config()
+const invokegemini= require("./server/services/ai.service.js")
 
 const port=process.env.port
 
@@ -17,6 +18,7 @@ credentials:true
 
 app.use("/api/auth",authrouter)
 
+invokegemini();
 
 connectDB();
 

@@ -21,6 +21,7 @@ export const InterviewProvider = ({ children }) => {
     setError(null);
     try {
       const data = await getAllInterviewReports();
+      console.log('[InterviewPilot] GET /api/interview response:', data);
       if (data && Array.isArray(data.reports)) {
         setReports(data.reports);
       } else {

@@ -51,7 +51,7 @@ res.status(200).json({
 
 interviewrouter.get("",authuser,async (req,res)=>{
     
-    const userId=req.user.id
+    const userId = new mongoose.Types.ObjectId(req.user.id);
 
    const reports = await interviewreportModel.aggregate([
     {

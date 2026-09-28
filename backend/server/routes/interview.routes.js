@@ -8,7 +8,7 @@ const interviewrouter= express.Router()
 
 interviewrouter.post("",authuser,upload.single("resume") ,async (req,res)=>{
 
-    console.log("at interview route")
+    
     const resumecontent=await (new pdfparse.PDFParse(Uint8Array.from(req.file.buffer))).getText()  
     const {selfDescription,jobDescription}=req.body
 

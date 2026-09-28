@@ -1,65 +1,58 @@
-import axios from 'axios'
-import { BASE_URL } from '../../../../config'
+import axios from 'axios';
+import { BASE_URL } from '../../../../config';
 
-export async function register({username,email,password})
-{
-    try{
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-       const respose= await axios.post(`${BASE_URL}/api/register`,{
-            username,email, password
-        },{
-            withCredentials:true
-        })
-
-        return respose.data ;
-    }
-    catch(err)
-    {
-        console.log(err)
-    }
-
+export async function register({ username, email, password }) {
+  try {
+    const response = await api.post('/api/auth/register', {
+      username,
+      email,
+      password,
+    });
+    return response.data;
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Registration failed';
+    throw new Error(message);
+  }
 }
 
-export async function login({email,password})
-{
-    try {
-
-        const response= await axios.post(`${BASE_URL}/api/login`,{
-            email,password
-        }, { withCredentials: true})
-
-        return response.data;
-        
-    } catch (error) {
-        console.log(error)
-    }
+export async function login({ email, password }) {
+  try {
+    const response = await api.post('/api/auth/login', {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Login failed';
+    throw new Error(message);
+  }
 }
 
-export async function logout()
-{
-    try {
-
-        const response= await axios.post(`${BASE_URL}/api/logout`, { withCredentials: true})
-
-        return response.data;
-        
-    } catch (error) {
-        console.log(error)
-    }
+export async function logout() {
+  try {
+    const response = await api.get('/api/auth/logout');
+    return response.data;
+  } catch (err) {
+    const message = err.response?.data?.message || err.message || 'Logout failed';
+    throw new Error(message);
+  }
 }
 
-export async function getme()
-{
-    try {
-
-        const response= await axios.post(`${BASE_URL}/api/getme`, { withCredentials: true})
-
-        return response.data;
-        
-    } catch (error) {
-        console.log(error)
-    }
+export async function getme() {
+  try {
+    const response = await api.get('/api/auth/getme');
+    return response.data;
+  } catch (err) {
+    return null;
+  }
 }
 
-
-
+export default api;

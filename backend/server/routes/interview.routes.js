@@ -63,7 +63,7 @@ interviewrouter.get("",authuser,async (req,res)=>{
         $project: {
             jobDescription: {
                 $concat: [
-                    { $substrCP: ["$jobDescription", 0, 100] },
+                    { $substrCP: ["$jobDescription", 0, 30] },
                     "..."
                 ]
             },

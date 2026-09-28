@@ -31,5 +31,18 @@ interviewrouter.post("",authuser,upload.single("resume") ,async (req,res)=>{
     })
 })
 
+interviewrouter.post("/report/:interviewId",authuser,async(req,res)=>{
+    const {interviewId}=req.params
+
+    const interviewReport= await interviewreportModel.findOne({_id:interviewId})
+
+    if(!interviewReport)
+{
+  return  res.json({message:"No recorded report found"})
+}
+
+
+        
+})
 
 module.exports=interviewrouter

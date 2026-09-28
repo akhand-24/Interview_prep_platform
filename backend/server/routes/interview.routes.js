@@ -41,7 +41,10 @@ interviewrouter.post("/report/:interviewId",authuser,async(req,res)=>{
   return  res.json({message:"No recorded report found"})
 }
 
-
+res.status(200).json({
+    message:"Interview Record Fetched",
+    interviewReport
+})
         
 })
 

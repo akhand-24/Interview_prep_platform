@@ -42,7 +42,13 @@ authrouter.post("/register",async function(req,res){
    })
    const token=jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"1d"})
 
-   res.cookie("token",token);
+   res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,       // Required for cross-site cookies
+    sameSite: "none",   // Required for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+});
+
 
    res.status(201).json({message:"User created successfully",user:{
     id:user._id,username,email
@@ -70,7 +76,13 @@ let user = await usermodel.findOne({
 
     const token=jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"1d"})
 
-   res.cookie("token",token);
+   res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,       // Required for cross-site cookies
+    sameSite: "none",   // Required for cross-site cookies
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+});
+
 
    res.status(201).json({message:"User Logged In successfully",user:{
     id:user._id,username:user.username,email

@@ -50,34 +50,41 @@ res.status(200).json({
 })
 
 interviewrouter.get("",authuser,async (req,res)=>{
-    
-    const userId = new mongoose.Types.ObjectId(req.user.id);
-
-   const reports = await interviewreportModel.aggregate([
-    {
-        $match: {
-            user: userId
-        }
-    },
-    {
-        $project: {
-            jobDescription: {
-                $concat: [
-                    { $substrCP: ["$jobDescription", 0, 30] },
-                    "..."
-                ]
+    try {
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+        const reports = await interviewreportModel.aggregate([
+            {
+                $match: {
+                    user: userId
+                }
             },
-            matchScore: 1
-        }
+            {
+                $project: {
+                    jobDescription: {
+                        $concat: [
+                            { $substrCP: ["$jobDescription", 0, 30] },
+                            "..."
+                        ]
+                    },
+                    matchScore: 1
+                }
+            }
+        ]);
+        return res.status(200).json({
+            message: "Interview Record Fetched",
+            reports: reports || []
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Failed to fetch reports" });
     }
-]);
+});
+
+    
+
 
  
 
-res.status(200).json({
-    message:"Interview Record Fetched",
-    reports
-})
-})
+
 
 module.exports=interviewrouter

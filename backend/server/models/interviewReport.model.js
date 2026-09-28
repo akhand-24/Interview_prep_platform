@@ -1,5 +1,60 @@
 const mongoose =require("mongoose")
 
+
+const technicalQuestionSchema=new mongoose.Schema({
+    question:{
+        type:String 
+    },
+    intention:{
+        type:String 
+    },
+    answer:{
+        type:String 
+    }
+    
+},{_id: false})
+
+const behaviouralQuestionSchema=new mongoose.Schema({
+    question:{
+        type:String 
+    },
+    intention:{
+        type:String 
+    },
+    answer:{
+        type:String 
+    }
+
+},{_id: false})
+
+const skillGapSchema = new mongoose.Schema({
+    skill:{
+        type:String,
+        required:true 
+    },
+    severity:{
+        type: String,
+        enum:["low","medium","high"],
+        required:true
+    }
+},{_id:false})
+
+const preparationplanSchema= new mongoose.Schema({
+    day:{
+        type:Number 
+        , required:true 
+    },
+    focus:{
+        type:String , required:true 
+    },
+    tasks:[
+        {
+            type:String
+        }
+    ]
+    
+})
+
 const interviewreportschema=new mongoose.Schema({
     jobDescription:{
         type: String,
@@ -19,62 +74,12 @@ const interviewreportschema=new mongoose.Schema({
     technicalQuestions:[technicalQuestionSchema],
     behavioralQuestions:[behaviouralQuestionSchema],
     skillGaps:[skillGapSchema],
-    preparationPlan:[preparationplanSchema]
-
-
-})
-
-const technicalQuestionSchema=new mongoose({
-    question:{
-        type:String 
-    },
-    intention:{
-        type:String 
-    },
-    answer:{
-        type:String 
+    preparationPlan:[preparationplanSchema],
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"users"
     }
 
-},{_id: false})
-
-const behaviouralQuestionSchema=new mongoose({
-    question:{
-        type:String 
-    },
-    intention:{
-        type:String 
-    },
-    answer:{
-        type:String 
-    }
-
-},{_id: false})
-
-const skillGapSchema = new mongoose({
-    skill:{
-        type:String,
-        required:true 
-    },
-    severity:{
-        type: String,
-        enum:["low","medium","high"],
-        required:true
-    }
-},{_id:false})
-
-const preparationplanSchema= new mongoose({
-    day:{
-        type:Number 
-        , required:true 
-    },
-    focus:{
-        type:String , required:true 
-    },
-    tasks:[
-        {
-            type:String
-        }
-    ]
 
 })
 

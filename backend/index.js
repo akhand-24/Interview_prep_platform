@@ -20,7 +20,7 @@ credentials:true
 
 app.use("/api/auth",authrouter)
 
-app.use("api/interiew",interviewrouter)
+app.use("/api/interview",interviewrouter)
 
 connectDB();
 

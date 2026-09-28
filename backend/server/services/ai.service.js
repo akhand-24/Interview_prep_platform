@@ -219,7 +219,7 @@ try{
         const result = JSON.parse(response.text);
 
     const report= interviewReportSchema.parse(result);
-    console.log(report);
+    // console.log(report);
 
     return report
     

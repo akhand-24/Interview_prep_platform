@@ -97,7 +97,7 @@ authrouter.get("/logout",async function(req,res){
 
 authrouter.get("/getme",authuser, async function(req,res){
     const id=req.user.id;
-
+    console.log("At user middleware")
     const user=await usermodel.findOne({
         _id:id
     })
